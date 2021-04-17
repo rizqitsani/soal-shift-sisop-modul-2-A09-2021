@@ -6,7 +6,8 @@
 #include <string.h>
 #include <dirent.h>
 
-char* cut_four (char* s){
+//Untuk menghapus ".jpg" pada getUmur
+char* cut_four (char* s) {
     int n;
     int i;
     char* new;
@@ -22,29 +23,27 @@ char* cut_four (char* s){
     return new;
 }
 
+// Fungsi copy gambar
 void copy(char *src, char *dest) {
 	pid_t child_id;
 	child_id = fork();
-	if (child_id == 0)
-	{
+	if (child_id == 0) {
 		char *argv[] = {"cp", "-n", src, dest, NULL};
 		execv("/usr/bin/cp", argv);
 	}
 }
 
-void delete (char *file)
-{
+// Fungsi delete file
+void delete (char *file) {
 	pid_t child_id;
 	child_id = fork();
-	if (child_id == 0)
-	{
+	if (child_id == 0) {
 		char *argv[] = {"rm", "-d", file, NULL};
 		execv("/usr/bin/rm", argv);
 	}
 }
-
-void listFilesRecursively(char *basePath)
-{
+//Cek list file di dir secara rekursif
+void listFilesRecursively(char *basePath) {
 	char path[1000];
 	struct dirent *dp;
 	DIR *dir = opendir(basePath);
@@ -54,22 +53,25 @@ void listFilesRecursively(char *basePath)
 
 	while ((dp = readdir(dir)) != NULL) {
 		if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
-			char file0[100];
-			char file[100] = "/home/daffainfo/modul2/petshop/";
-			char file2[100] = "/home/daffainfo/modul2/petshop/";
-			char file3[1000] = "/home/daffainfo/modul2/petshop/";
+			char tempFolder[100];
+			char mkFolder[100] = "/home/daffainfo/modul2/petshop/";
+			char hewanSatu[100] = "/home/daffainfo/modul2/petshop/";
+			char hewanDua[1000] = "/home/daffainfo/modul2/petshop/";
 			char temp[1000], temp2[1000], temp3[1000], getJenis[1000], getNama[1000], getUmur[1000], getJenis2[100], getNama2[1000], getUmur2[1000];
 			char *token, *token2;
 			int status;
 			pid_t child_id = fork();
 
-			strcpy(file0, dp->d_name);
-			strtok(file0, ";");
-			strcat(file, file0);
+			//Untuk membuat dir dengan kategori hewannya
+			strcpy(tempFolder, dp->d_name);
+			strtok(tempFolder, ";");
+			strcat(mkFolder, tempFolder);
 
-			char move[100] = "/home/daffainfo/modul2/petshop/";
-			strcat(move, dp->d_name);
+			//Berisi list file gambar
+			char listFile[100] = "/home/daffainfo/modul2/petshop/";
+			strcat(listFile, dp->d_name);
 
+			//Mendapatkan informasi jenis, nama, umur yang berisi 1 gambar 1 hewan
 			strcpy(temp, dp->d_name);
 			token = strtok(temp, ";");
 			strcpy(getJenis, token);
@@ -78,11 +80,12 @@ void listFilesRecursively(char *basePath)
 			token = strtok(NULL, ";");
 			strcpy(getUmur, token);
 			// printf("%s\n",getUmur);
-			strcat(file2, getJenis);
-			strcat(file2, "/");
-			strcat(file2, getNama);
-			strcat(file2, ".jpg");
-
+			strcat(hewanSatu, getJenis);
+			strcat(hewanSatu, "/");
+			strcat(hewanSatu, getNama);
+			strcat(hewanSatu, ".jpg");
+			
+			//Mendapatkan informasi jenis, nama, umur yang berisi 1 gambar 2 hewan
 			if (strstr(dp->d_name, "_")) {
 				strcpy(temp2, dp->d_name); //dog;wkwk;6_cat;wkwk;5
 				char *token2;
@@ -96,31 +99,28 @@ void listFilesRecursively(char *basePath)
 				// printf("%s\n",getNama2);
 				token2 = strtok(NULL, ";");
 				strcpy(getUmur2, token2);
-				strcat(file3, getJenis2);
-				strcat(file3, "/");
-				strcat(file3, getNama2);
-				strcat(file3, ".jpg");
+				strcat(hewanDua, getJenis2);
+				strcat(hewanDua, "/");
+				strcat(hewanDua, getNama2);
+				strcat(hewanDua, ".jpg");
 			}
-
-			char deletefile[1000] = "/home/daffainfo/modul2/petshop/";
-			strcat(deletefile, dp->d_name);
-
+			//make dir
 			if (child_id == 0) {
-				char *argv[] = {"mkdir", "-p", file, NULL};
+				char *argv[] = {"mkdir", "-p", mkFolder, NULL};
 				execv("/bin/mkdir", argv);
 			}
 
-			//Fixing bug, ga ngerti lagi asli
+			//Copy gambar ke dir masing"
+			while ((wait(&status)) > 0);
+			copy(listFile, hewanSatu);
 
 			while ((wait(&status)) > 0);
-			copy(move, file2);
+			copy(listFile, hewanDua);
 
-			while ((wait(&status)) > 0);
-			copy(move, file3);
-
+			//Membuat keterangan berisi nama dan umur
 			FILE *fptr;
 			char fname[50];
-			strcpy(fname, file);
+			strcpy(fname, mkFolder);
 			strcat(fname, "/keterangan.txt");
 			fptr = fopen(fname, "a+");
 			if (!(strstr(dp->d_name,"_"))) {
@@ -133,8 +133,9 @@ void listFilesRecursively(char *basePath)
 
 			fclose(fptr);
 
+			//Menghapus semua file bekas copy
 			while ((wait(&status)) > 0);
-			delete (deletefile);
+			delete (listFile);
 
 			// Construct new path from our base path
 			strcpy(path, basePath);
@@ -154,6 +155,7 @@ int main(){
 	child_id = fork();
 	child_id2 = fork();
 
+	//make dir petshop
 	if (child_id == 0) {
 		((wait(&status)) > 0);
 		char *argv1[] = {"mkdir", "-p", "/home/daffainfo/modul2/petshop", NULL};
@@ -161,6 +163,7 @@ int main(){
 	} else {
 		((wait(&status)) > 0);
 	}
+	//Unzip pets.zip
 	if (child_id2 == 0) {
 		char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
 		execv("/bin/unzip", argv);
