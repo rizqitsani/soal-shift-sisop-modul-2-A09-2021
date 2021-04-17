@@ -14,7 +14,7 @@ void copy(char *src, char *dest) {
 	}
 }
 
-void delete (char *file) {
+void delete(char *file) {
 	pid_t child_id = fork();
 	if (child_id == 0) {
 		char *argv[] = {"rm", "-d", file, NULL};
@@ -33,7 +33,7 @@ void listFilesRecursively(char *basePath) {
 	while ((dp = readdir(dir)) != NULL) {
 		if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
 			int status;
-			char *token, *token2, *hewan;
+			char *token, *token2;
 			char data[360], filename[100], getNama[50], getJenis[50];
 			pid_t child_id = fork();
 
@@ -57,7 +57,7 @@ void listFilesRecursively(char *basePath) {
 				strcpy(getNama, strtok_r(NULL, ";", &token2));
 				strcat(getNama, ".jpg");
 				sprintf(data, "/home/daffainfo/modul2/petshop/%s/%s", getJenis, getNama);
-				hewan = strtok_r(NULL, "_", &save1);
+				hewan = strtok_r(NULL, "_", &token);
 			}
 
 			while ((wait(&status)) > 0);
@@ -70,7 +70,7 @@ void listFilesRecursively(char *basePath) {
 			copy(listFile, data);
 
 			while ((wait(&status)) > 0);
-			delete (listFile);
+			delete(listFile);
 
 			// Construct new path from our base path
 			strcpy(path, basePath);
@@ -98,7 +98,7 @@ int main() {
 		((wait(&status)) > 0);
 	}
 	if (child_id2 == 0) {
-		char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
+		char *argv[] = {"unzip", "pets.zip", "*;*", "-d", "/home/daffainfo/modul2/petshop", NULL};
 		execv("/bin/unzip", argv);
 	} else {
 		((wait(&status)) > 0);
