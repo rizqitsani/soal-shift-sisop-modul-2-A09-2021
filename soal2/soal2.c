@@ -5,131 +5,186 @@
 #include <wait.h>
 #include <string.h>
 #include <dirent.h>
+#include <time.h>
 
-void copy(char *src, char *dest) {
-  pid_t child_id;
-  child_id = fork();
-  if (child_id == 0) {
-    char *argv[] = {"cp", src, dest, NULL};
-    execv("/usr/bin/cp", argv);
-  }
+void delay(int numOfSec)
+{
+	int numOfMilliSec = 1000 * numOfSec;
+	time_t startTime = clock();
+	while(clock() < startTime + numOfMilliSec);
 }
 
-void delete(char *file) {
-  pid_t child_id;
-  child_id = fork();
-  if (child_id == 0) {
-    char *argv[] = {"rm", "-d", file, NULL};
-    execv("/usr/bin/rm", argv);
-  }
+void copy(char *src, char *dest)
+{
+	pid_t child_id;
+	child_id = fork();
+	if (child_id == 0)
+	{
+		char *argv[] = {"cp", "-n", src, dest, NULL};
+		execv("/usr/bin/cp", argv);
+	}
 }
 
-void listFilesRecursively(char *basePath) {
-  char path[1000];
-  struct dirent *dp;
-  DIR *dir = opendir(basePath);
-
-  if (!dir)
-    return;
-
-  while ((dp = readdir(dir)) != NULL) {
-    if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
-      int status;
-      pid_t child_id = fork();
-
-      char file0[100];
-      strcpy(file0, dp->d_name);
-      strtok(file0, ";");
-      char file[100] = "/home/daffainfo/modul2/petshop/";
-      strcat(file, file0);
-
-      char move[100] = "/home/daffainfo/modul2/petshop/";
-      strcat(move, dp->d_name);
-
-      char temp[1000];
-      strcpy(temp, dp->d_name);
-      char *token;
-      token = strtok(temp, ";");
-      char getJenis[1000];
-      strcpy(getJenis, token);
-      token = strtok(NULL, ";");
-      char getNama[1000];
-      strcpy(getNama, token);
-      char file2[100] = "/home/daffainfo/modul2/petshop/";
-      strcat(file2, getJenis);
-      strcat(file2, "/");
-      strcat(file2, getNama);
-
-      char temp2[1000] = "";
-      strcpy(temp2, dp->d_name);
-      char *token2;
-      token2 = strtok(temp2, "_");
-	  //fix segmentation fault, entah kenapa gabisa? :( )
-	  char temp3[1000];
-	  strcpy(temp3, token2);
-      token2 = strtok(temp3, ";");
-      char getJenis2[100];
-      strcpy(getJenis2, token2);
-      token2 = strtok(NULL, ";");
-      char getNama2[1000] = "";
-      strcpy(getNama2, token2);
-      char file3[1000] = "/home/daffainfo/modul2/petshop/";
-      strcat(file3, getJenis2);
-      strcat(file3, "/");
-      strcat(file3, getNama2);
-
-	  char deletefile[1000] = "/home/daffainfo/modul2/petshop/";
-	  strcat(deletefile, dp->d_name);
-
-      if (child_id == 0) {
-        char *argv[] = {"mkdir", "-p", file, NULL};
-        execv("/bin/mkdir", argv);
-      }
-
-      while ((wait(&status)) > 0);
-      copy(move, file2);
-	  
-	  while ((wait(&status)) > 0);
-	  copy(move, file3);
-	  
-	  while ((wait(&status)) > 0);
-	  delete(deletefile);
-
-      // Construct new path from our base path
-      strcpy(path, basePath);
-      strcat(path, "/");
-      strcat(path, dp->d_name);
-
-      listFilesRecursively(path);
-    }
-  }
-
-  closedir(dir);
+void delete (char *file)
+{
+	pid_t child_id;
+	child_id = fork();
+	if (child_id == 0)
+	{
+		char *argv[] = {"rm", "-d", file, NULL};
+		execv("/usr/bin/rm", argv);
+	}
 }
 
-int main() {
-  int status;
-  pid_t child_id, child_id2;
-  child_id = fork();
-  child_id2 = fork();
+void listFilesRecursively(char *basePath)
+{
+	char path[1000];
+	struct dirent *dp;
+	DIR *dir = opendir(basePath);
 
-  if (child_id == 0) {
-    ((wait(&status)) > 0);
-    char *argv1[] = {"mkdir", "-p", "/home/daffainfo/modul2/petshop", NULL};
-    execv("/bin/mkdir", argv1);
-  }
-  else {
-    ((wait(&status)) > 0);
-  }
-  if (child_id2 == 0) {
-    char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
-    execv("/bin/unzip", argv);
-  }
-  else {
-    ((wait(&status)) > 0);
-  }
-  
-  listFilesRecursively("/home/daffainfo/modul2/petshop");
+	if (!dir)
+		return;
 
-  return 0;
+	while ((dp = readdir(dir)) != NULL)
+	{
+		if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0)
+		{
+			char temp2[1000] = "";
+			char *token2;
+			char getJenis2[100];
+			char temp3[1000];
+			char getNama2[1000] = "";
+			char file3[1000] = "/home/daffainfo/modul2/petshop/";
+			int status;
+			pid_t child_id;
+			child_id = fork();
+
+			char file0[100];
+			strcpy(file0, dp->d_name);
+			strtok(file0, ";");
+			char file[100] = "/home/daffainfo/modul2/petshop/";
+			strcat(file, file0);
+
+			char move[100] = "/home/daffainfo/modul2/petshop/";
+			strcat(move, dp->d_name);
+
+			char temp[1000];
+			strcpy(temp, dp->d_name);
+			char *token;
+			token = strtok(temp, ";");
+			char getJenis[1000];
+			strcpy(getJenis, token);
+			token = strtok(NULL, ";");
+			char getNama[1000];
+			strcpy(getNama, token);
+			token = strtok(NULL, ";");
+			char getUmur[1000];
+			strcpy(getUmur, token);
+			char file2[100] = "/home/daffainfo/modul2/petshop/";
+			strcat(file2, getJenis);
+			strcat(file2, "/");
+			strcat(file2, getNama);
+			strcat(file2, ".jpg");
+
+			if (strstr(dp->d_name, "_"))
+			{
+                char temp2[1000], temp3[1000], getJenis2[100], getNama2[1000], getUmur2[1000];
+                strcpy(temp2, dp->d_name); //dog;wkwk;6_cat;wkwk;5
+                char *token2;
+                token2 = strtok(temp2, "_"); //dog;wkwk;6
+                token2 = strtok(NULL, "_");  //dog;wkwk;6
+                strcpy(temp3, token2);
+                token2 = strtok(temp3, ";");
+                strcpy(getJenis2, token2);
+                token2 = strtok(NULL, ";");
+                strcpy(getNama2, token2);
+                token2 = strtok(NULL, ";");
+                strcpy(getUmur2, token2);
+                strcat(file3, getJenis2);
+                strcat(file3, "/");
+                strcat(file3, getNama2);
+                strcat(file3,".jpg");
+			}
+
+			char deletefile[1000] = "/home/daffainfo/modul2/petshop/";
+			strcat(deletefile, dp->d_name);
+
+			if (child_id == 0) {
+				char *argv[] = {"mkdir", "-p", file, NULL};
+				execv("/bin/mkdir", argv);
+			}
+
+			//Fixing bug, ga ngerti lagi asli
+
+			int count = 1;
+
+			if(count == 1) {
+				while ((wait(&status)) > 0);
+				copy(move, file2);
+				delay(10);
+				count = 2;
+			}
+
+			else if (count == 2) {
+				while ((wait(&status)) > 0);
+				copy(move, file3);
+			}
+
+			// FILE *fptr;
+			// char st[100];
+			// char fname[50];
+			// strcpy(fname, file);
+			// strcat(fname, "/keterangan.txt");
+			// fptr = fopen(fname, "a+");
+
+			// fprintf(fptr, "nama : %s\n", getNama);
+			// fprintf(fptr, "umur : %s tahun\n\n", getUmur);
+
+			// fclose(fptr);
+
+			while ((wait(&status)) > 0);
+			delete (deletefile);
+
+			// Construct new path from our base path
+			strcpy(path, basePath);
+			strcat(path, "/");
+			strcat(path, dp->d_name);
+
+			listFilesRecursively(path);
+		}
+	}
+
+	closedir(dir);
+}
+
+int main()
+{
+	int status;
+	pid_t child_id, child_id2;
+	child_id = fork();
+	child_id2 = fork();
+
+	if (child_id == 0)
+	{
+		((wait(&status)) > 0);
+		char *argv1[] = {"mkdir", "-p", "/home/daffainfo/modul2/petshop", NULL};
+		execv("/bin/mkdir", argv1);
+	}
+	else
+	{
+		((wait(&status)) > 0);
+	}
+	if (child_id2 == 0)
+	{
+		char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
+		execv("/bin/unzip", argv);
+	}
+	else
+	{
+		((wait(&status)) > 0);
+	}
+
+	listFilesRecursively("/home/daffainfo/modul2/petshop");
+
+	return 0;
 }
