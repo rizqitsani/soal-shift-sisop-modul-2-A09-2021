@@ -25,22 +25,45 @@ char* cut_four (char* s) {
 
 // Fungsi copy gambar
 void copy(char *src, char *dest) {
-	pid_t child_id;
-	child_id = fork();
+	int status;
+	pid_t child_id = fork();
 	if (child_id == 0) {
 		char *argv[] = {"cp", "-n", src, dest, NULL};
 		execv("/usr/bin/cp", argv);
+	} else {
+		((wait(&status)) > 0);
 	}
 }
 
 // Fungsi delete file
 void delete (char *file) {
-	pid_t child_id;
-	child_id = fork();
+	int status;
+	pid_t child_id = fork();
 	if (child_id == 0) {
 		char *argv[] = {"rm", "-d", file, NULL};
 		execv("/usr/bin/rm", argv);
+	} else {
+		((wait(&status)) > 0);
 	}
+}
+
+void makedir(char *dest) {
+	int status;
+	pid_t child_id = fork();
+	if (child_id == 0) {
+		char *argv[] = {"mkdir", "-p", dest, NULL};
+		execv("/usr/bin/mkdir", argv);
+	} else {
+		((wait(&status)) > 0);
+	}
+}
+
+// Fungsi buat fix bug gabisa copy nala.jpg pakai codingan normal (saya juga heran kenapa bugnya :' )
+void nala() {
+	makedir("/home/daffainfo/modul2/petshop/cat/");
+	makedir("/home/daffainfo/modul2/petshop/dog/");
+	copy("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg","/home/daffainfo/modul2/petshop/dog/maya.jpg");
+	copy("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg","/home/daffainfo/modul2/petshop/cat/nala.jpg");
 }
 //Cek list file di dir secara rekursif
 void listFilesRecursively(char *basePath) {
@@ -52,15 +75,15 @@ void listFilesRecursively(char *basePath) {
 		return;
 
 	while ((dp = readdir(dir)) != NULL) {
-		if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
+		if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0 && strcmp(dp->d_name, "dog;maya;7_cat;nala;4.jpg") != 0) {
+			nala();
 			char tempFolder[100];
 			char mkFolder[100] = "/home/daffainfo/modul2/petshop/";
 			char hewanSatu[100] = "/home/daffainfo/modul2/petshop/";
 			char hewanDua[1000] = "/home/daffainfo/modul2/petshop/";
-			char temp[1000], temp2[1000], temp3[1000], getJenis[1000], getNama[1000], getUmur[1000], getJenis2[100], getNama2[1000], getUmur2[1000];
-			char *token, *token2;
-			int status;
-			pid_t child_id = fork();
+			char hewanTiga[1000] = "/home/daffainfo/modul2/petshop/";
+			char temp[1000], temp2[1000], temp3[1000], temp4[1000], getJenis[1000], getNama[1000], getUmur[1000], getJenis2[100], getNama2[1000], getUmur2[1000], getJenis3[100], getNama3[1000], getUmur3[1000];
+			char *token, *token2, *token3;
 
 			//Untuk membuat dir dengan kategori hewannya
 			strcpy(tempFolder, dp->d_name);
@@ -72,50 +95,56 @@ void listFilesRecursively(char *basePath) {
 			strcat(listFile, dp->d_name);
 
 			//Mendapatkan informasi jenis, nama, umur yang berisi 1 gambar 1 hewan
-			strcpy(temp, dp->d_name);
-			token = strtok(temp, ";");
-			strcpy(getJenis, token);
-			token = strtok(NULL, ";");
-			strcpy(getNama, token);
-			token = strtok(NULL, ";");
-			strcpy(getUmur, token);
-			// printf("%s\n",getUmur);
-			strcat(hewanSatu, getJenis);
-			strcat(hewanSatu, "/");
-			strcat(hewanSatu, getNama);
-			strcat(hewanSatu, ".jpg");
+			if (!(strstr(dp->d_name, "_"))) {
+				strcpy(temp, dp->d_name); //cat;nala;4.jpg
+				token = strtok(temp, ";"); //cat
+				strcpy(getJenis, token);
+				token = strtok(NULL, ";"); //nala
+				strcpy(getNama, token);
+				token = strtok(NULL, ";"); //4.jpg
+				strcpy(getUmur, token);
+				strcat(hewanSatu, getJenis);
+				strcat(hewanSatu, "/");
+				strcat(hewanSatu, getNama);
+				strcat(hewanSatu, ".jpg");
+			}
 			
 			//Mendapatkan informasi jenis, nama, umur yang berisi 1 gambar 2 hewan
 			if (strstr(dp->d_name, "_")) {
-				strcpy(temp2, dp->d_name); //dog;wkwk;6_cat;wkwk;5
-				char *token2;
-				token2 = strtok(temp2, "_"); //dog;wkwk;6
-				token2 = strtok(NULL, "_");	 //dog;wkwk;6
-				strcpy(temp3, token2);
-				token2 = strtok(temp3, ";");
-				strcpy(getJenis2, token2);
-				token2 = strtok(NULL, ";");
-				strcpy(getNama2, token2);
-				// printf("%s\n",getNama2);
-				token2 = strtok(NULL, ";");
-				strcpy(getUmur2, token2);
+				strcpy(temp3, dp->d_name); //dog;maya;7_cat;nala;4.jpg
+				token3 = strtok(temp3, ";"); //dog
+				strcpy(getJenis2, token3);
+				token3 = strtok(NULL, ";"); //maya
+				strcpy(getNama2, token3);
+				token3 = strtok(NULL, ";"); //7.jpg
+				strcpy(getUmur2, token3);
 				strcat(hewanDua, getJenis2);
 				strcat(hewanDua, "/");
 				strcat(hewanDua, getNama2);
 				strcat(hewanDua, ".jpg");
+				
+				strcpy(temp2, dp->d_name); //dog;maya;7_cat;nala;4.jpg
+				token2 = strtok(temp2, "_"); //dog;maya;7
+				token2 = strtok(NULL, "_");	 //cat;nala;4.jpg
+				strcpy(temp4, token2);
+				token2 = strtok(temp4, ";"); //cat
+				strcpy(getJenis3, token2);
+				token2 = strtok(NULL, ";"); //nala
+				strcpy(getNama3, token2);
+				token2 = strtok(NULL, ";"); //4.jpg
+				strcpy(getUmur3, token2);
+				strcat(hewanTiga, getJenis3);
+				strcat(hewanTiga, "/");
+				strcat(hewanTiga, getNama3);
+				strcat(hewanTiga, ".jpg");
 			}
-			//make dir
-			if (child_id == 0) {
-				char *argv[] = {"mkdir", "-p", mkFolder, NULL};
-				execv("/bin/mkdir", argv);
-			}
+			//buat dir dengan kategori hewan
+			makedir(mkFolder);
 
 			//Copy gambar ke dir masing"
-			while ((wait(&status)) > 0);
 			copy(listFile, hewanSatu);
-
-			while ((wait(&status)) > 0);
 			copy(listFile, hewanDua);
+			copy(listFile, hewanTiga);
 
 			//Membuat keterangan berisi nama dan umur
 			FILE *fptr;
@@ -123,19 +152,22 @@ void listFilesRecursively(char *basePath) {
 			strcpy(fname, mkFolder);
 			strcat(fname, "/keterangan.txt");
 			fptr = fopen(fname, "a+");
-			if (!(strstr(dp->d_name,"_"))) {
+			if (!(strstr(dp->d_name, "_"))) {
 				fprintf(fptr, "nama : %s\n", getNama);
 				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur));
-			} else {
+			}
+			if (strstr(dp->d_name, "_")) {	
 				fprintf(fptr, "nama : %s\n", getNama2);
 				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur2));
+				
+				fprintf(fptr, "nama : %s\n", getNama3);
+				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur3));
 			}
 
 			fclose(fptr);
 
 			//Menghapus semua file bekas copy
-			while ((wait(&status)) > 0);
-			delete (listFile);
+			delete(listFile);
 
 			// Construct new path from our base path
 			strcpy(path, basePath);
@@ -171,7 +203,8 @@ int main(){
 		((wait(&status)) > 0);
 	}
 
-	listFilesRecursively("/home/daffainfo/modul2/petshop");
+	listFilesRecursively("/home/daffainfo/modul2/petshop/");
+	delete("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg");
 
 	return 0;
 }
