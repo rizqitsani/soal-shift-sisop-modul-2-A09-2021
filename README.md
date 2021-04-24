@@ -120,8 +120,77 @@ Inti dari sub soal 2d ialah karena dalam satu foto bisa terdapat lebih dari satu
 				strcat(hewanTiga, ".jpg");
 			}
 ```
+- Array `temp3` berisi list nama file contohnya ialah `dog;maya;7_cat;nala;4.jpg`
+- Array `getJenis2` berisi kategori dari list file, kategori tersebut didapatkan menggunakan `strtok` array `temp3` dan nantinya akan menghasilkan list kategori hewan
+- Array `getNama2` berisi daftar nama hewan dari hasil `strtok` dengan delimiter `;` yang hasilnya dimasukkan kedalam pointer `token`
+- Array `getUmur2` berisi daftar umur hewan dari hasil `strtok` dengan delimiter `;` yang hasilnya dimasukkan kedalam pointer `token`
+- Array hewanDua berisi path list file dengan nama hewan yang telah direname menjadi `/home/{user}/modul2/petshop/{kategori}/{namahewan}.jpg`
+- Pointer `token3` berisi hasil `strtok`
+
+Kemudian untuk mendapatkan informasi hewan setelah karakter `_`
+
+- Array `temp2` berisi list nama file contohnya ialah `dog;maya;7_cat;nala;4.jpg`
+
+Di `strtok` dengan delimiter `_` sebanyak 2 kali agar bisa mendapatkan `cat;nala;4.jpg` dan juga dimasukkan kedalam array baru bernama `temp4` untuk menghindari terjadinya segmentation fault
+
+- Array `getJenis3` berisi kategori dari list file, kategori tersebut didapatkan menggunakan `strtok` array `temp3` dan nantinya akan menghasilkan list kategori hewan
+- Array `getNama3` berisi daftar nama hewan dari hasil `strtok` dengan delimiter `;` yang hasilnya dimasukkan kedalam pointer `token`
+- Array `getUmur3` berisi daftar umur hewan dari hasil `strtok` dengan delimiter `;` yang hasilnya dimasukkan kedalam pointer `token`
+- Array hewanTiga berisi path list file dengan nama hewan yang telah direname menjadi `/home/{user}/modul2/petshop/{kategori}/{namahewan}.jpg`
+- Pointer `token2` berisi hasil `strtok`
+
 ### 2e.
 Inti dari sub soal 2e ialah membuat file `keterangan.txt` di masing-masing folder kategori hewan, dan file tersebut berisi nama dan umur hewan setiap direktori
+```c
+			FILE *fptr;
+			char fname[50];
+			strcpy(fname, mkFolder);
+			strcat(fname, "/keterangan.txt");
+			fptr = fopen(fname, "a+");
+			if (!(strstr(dp->d_name, "_"))) {
+				fprintf(fptr, "nama : %s\n", getNama);
+				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur));
+			}
+```
+menggunakan fungsi `fopen` dengan mode `a+` agar bisa mengisi data yang ada di `/home/${user}/modul2/petshop/{kategori}/keterangan.txt`. Kemudian didalam file `keterangan.txt` tersebut terdalam data nama dan umur, untuk umur ini menggunakan fungsi baru bernama `cut_four` karena output dari `getUmur` contohnya seperti ini `0.6.jpg` jadi untuk menghilangkan `.jpg` menggunakan fungsi tersebut
+
+```c
+//Untuk menghapus ".jpg" pada getUmur
+char* cut_four (char* s) {
+    int n;
+    int i;
+    char* new;
+    for (i = 0; s[i] != '\0'; i++);
+    // lenght of the new string
+    n = i - 4 + 1;
+    if (n < 1)
+        return NULL;
+    new = (char*) malloc (n * sizeof(char));
+    for (i = 0; i < n - 1; i++)
+        new[i] = s[i];
+    new[i] = '\0';
+    return new;
+}
+```
+### Hambatan
+- Terdapat banyak sekali error segmentation fault saat mengerjakan soal2
+- Stuck di soal 2d karena membutuhkan logika yang cukup rumit untuk memisahkan 2 hewan dalam 1 foto
+- Terdapat bug tidak bisa copy file bernama `dog;maya;7_cat;nala;4.jpg` sedangkan yang lain bisa, saya juga tidak tahu kenapa tidak bisa dan cara untuk memperbaiki hal tersebut saya membuat fungsi baru bernama `nala()` yang berisi `makedir()` dan `copy()` file secara manual
+```c
+void nala() {
+	makedir("/home/daffainfo/modul2/petshop/cat/");
+	makedir("/home/daffainfo/modul2/petshop/dog/");
+	copy("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg","/home/daffainfo/modul2/petshop/dog/maya.jpg");
+	copy("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg","/home/daffainfo/modul2/petshop/cat/nala.jpg");
+}
+```
+### Output
+Ini adalah screenshoot folder `/modul2/petshop/` yang berisi folder-folder kategori hewan yang telah diextract
+![Ini folder kategori hewan https://ibb.co/mzFhtCF](https://i.ibb.co/f0GrtYG/Screenshot-from-2021-04-25-00-13-28.png)
+Kemudian jika kita ambil contoh folder bernama `betta` akan berisi file nama hewan dan juga terdapat file `keterangan.txt`
+![Ini isi folder salah satu kategori hewan https://ibb.co/qF2xhvR](https://i.ibb.co/dJH7XRQ/Screenshot-from-2021-04-25-00-13-31.png)
+Dan jika kita lihat isi `keterangan.txt` akan berisi nama dan umur setiap hewan
+![Isi keterangan.txt https://ibb.co/fp7bYDT](https://i.ibb.co/HzQ0Dh9/Screenshot-from-2021-04-25-00-13-33.png)
 
 ## Nomor 3
 Source Code : [click here](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal3/soal3.c)
