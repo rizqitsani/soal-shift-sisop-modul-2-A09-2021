@@ -1,6 +1,47 @@
 # soal-shift-sisop-modul-2-A09-2021
 ## Nomor 1
 ## Nomor 2
+### 2a.
+Inti dari sub soal 2a ialah mengunzip file jpg yang ada didalam `pets.zip` kemudian membuat folder baru di `/home/${USER}/modul2/petshop`. Disini saya membuat 2 fungsi baru bernama `unzip()` dan `makedir()` untuk menyelesaikan soal 2a.
+```c
+void makedir(char *dest) {
+	int status;
+	pid_t child_id = fork();
+	if (child_id == 0) {
+		char *argv[] = {"mkdir", "-p", dest, NULL};
+		execv("/usr/bin/mkdir", argv);
+	} else {
+		((wait(&status)) > 0);
+	}
+}
+```
+Saya membuat fungsi baru bernama `makedir()` agar mempermudah saya  karena makedir akan digunakan selanjut agar tidak perulangan
+```c
+void unzip() {
+	int status;
+	pid_t child_id = fork();
+	if (child_id == 0) {
+		char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
+		execv("/usr/bin/unzip", argv);
+	} else {
+		((wait(&status)) > 0);
+	}
+}
+```
+Agar hanya file dengan ekstensi `jpg` yang terextract saya menggunakan argumen `*.jpg` agar mengextract hanya foto. Kemudian 2 fungsi ini dimasukkan ke dalam fungsi `main()`
+
+### 2b.
+Inti dari sub soal 2b ialah membuat folder berdasarkan nama kategori gambar hewan yang telah diextract, saya menggunakan directory listing secara rekursif agar bisa membaca seluruh file yang ada didalam folder `/modul2/petshop`
+
+### 2c.
+Inti dari sub soal 2c ialah memindahkan foto ke folder dengan kategori yang sesuai dan di rename dengan nama peliharaan.
+
+### 2d.
+Inti dari sub soal 2d ialah karena dalam satu foto bisa terdapat lebih dari satu peliharaan maka foto harus di pindah ke masing-masing kategori yang sesuai
+
+### 2e.
+Inti dari sub soal 2e ialah membuat file `keterangan.txt` di masing-masing folder kategori hewan, dan file tersebut berisi nama dan umur hewan setiap direktori
+
 ## Nomor 3
 Source Code : [click here](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal3/soal3.c)
 
