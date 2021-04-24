@@ -55,6 +55,4 @@ kemudian dijalankan dengan menggunakan execv
  char* arg[] = {"wget", "-q", "-O", path, link, NULL} ;
  execv("/bin/wget", arg) ;
 ```
-dan proses-proses program pada 3b ini dijalan kan dengan diawali *sleep(1)* untuk menunggu child proses dibawahnya diproses terlebih dahulu 
-
-
+dan proses-proses program pada 3b ini dijalankan dengan diawali *sleep(1)* agar tiap prosesnya menunggu child proses dibawahnya diproses terlebih dahulu lalu dijalankan lagi
