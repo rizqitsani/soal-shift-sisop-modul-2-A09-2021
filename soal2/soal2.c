@@ -58,6 +58,17 @@ void makedir(char *dest) {
 	}
 }
 
+void unzip() {
+	int status;
+	pid_t child_id = fork();
+	if (child_id == 0) {
+		char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
+		execv("/usr/bin/unzip", argv);
+	} else {
+		((wait(&status)) > 0);
+	}
+}
+
 // Fungsi buat fix bug gabisa copy nala.jpg pakai codingan normal (saya juga heran kenapa bugnya :' )
 void nala() {
 	makedir("/home/daffainfo/modul2/petshop/cat/");
@@ -65,6 +76,7 @@ void nala() {
 	copy("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg","/home/daffainfo/modul2/petshop/dog/maya.jpg");
 	copy("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg","/home/daffainfo/modul2/petshop/cat/nala.jpg");
 }
+
 //Cek list file di dir secara rekursif
 void listFilesRecursively(char *basePath) {
 	char path[1000];
@@ -156,13 +168,13 @@ void listFilesRecursively(char *basePath) {
 				fprintf(fptr, "nama : %s\n", getNama);
 				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur));
 			}
-			if (strstr(dp->d_name, "_")) {	
-				fprintf(fptr, "nama : %s\n", getNama2);
-				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur2));
+			// if (strstr(dp->d_name, "_")) {	
+			// 	fprintf(fptr, "nama : %s\n", getNama2);
+			// 	fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur2));
 				
-				fprintf(fptr, "nama : %s\n", getNama3);
-				fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur3));
-			}
+			// 	fprintf(fptr, "nama : %s\n", getNama3);
+			// 	fprintf(fptr, "umur : %s tahun\n\n", cut_four(getUmur3));
+			// }
 
 			fclose(fptr);
 
@@ -181,27 +193,10 @@ void listFilesRecursively(char *basePath) {
 	closedir(dir);
 }
 
-int main(){
-	int status;
-	pid_t child_id, child_id2;
-	child_id = fork();
-	child_id2 = fork();
-
-	//make dir petshop
-	if (child_id == 0) {
-		((wait(&status)) > 0);
-		char *argv1[] = {"mkdir", "-p", "/home/daffainfo/modul2/petshop", NULL};
-		execv("/bin/mkdir", argv1);
-	} else {
-		((wait(&status)) > 0);
-	}
-	//Unzip pets.zip
-	if (child_id2 == 0) {
-		char *argv[] = {"unzip", "-j", "pets.zip", "*.jpg", "-d", "/home/daffainfo/modul2/petshop", NULL};
-		execv("/bin/unzip", argv);
-	} else {
-		((wait(&status)) > 0);
-	}
+int main() {
+	
+	makedir("/home/daffainfo/modul2/petshop/");
+	unzip();
 
 	listFilesRecursively("/home/daffainfo/modul2/petshop/");
 	delete("/home/daffainfo/modul2/petshop/dog;maya;7_cat;nala;4.jpg");
