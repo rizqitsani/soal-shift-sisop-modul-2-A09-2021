@@ -40,7 +40,7 @@ void moveFile(char srcDir[], char destDir[]) {
   while(wait(&status) > 0);
 }
 
-void downloadThenUnzip(char *fileName[]) {
+void downloadThenUnzip() {
   char *url[] = {
     "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download",
     "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download",
@@ -115,17 +115,11 @@ int main() {
 
       while(wait(&status) > 0);
 
-      downloadThenUnzip(fileName);
+      downloadThenUnzip();
 
       for(int i = 0; i < 3; i++) {
         moveFile(folderName[i], desiredName[i]);
       }
-
-      if((child_id = fork()) == 0) {
-        execlp("rm", "rm", "-rf", folderName[0], folderName[1], folderName[2], NULL);
-      }
-
-      while(wait(&status) > 0);
     } else if (
       currTime->tm_mday == 9  &&
       currTime->tm_mon  == 3  &&
