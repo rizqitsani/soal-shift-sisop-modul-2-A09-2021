@@ -524,7 +524,7 @@ void pkiller(char a[]) {
 	fclose(src) ;
 }
 ```
-###3e. Membuat dua program utama yaitu command -x dan -z
+### 3e. Membuat dua program utama yaitu command -x dan -z
 
 1. "-z" command untuk ketika program "killer" dijalankan dapat menghentikan semua operasi proses
 ```bash
