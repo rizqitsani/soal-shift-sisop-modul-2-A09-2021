@@ -1,5 +1,16 @@
 # soal-shift-sisop-modul-2-A09-2021
+
+## Daftar Isi
+* [Daftar Isi](#daftar-isi)
+* [Nomor 1](#nomor-1)
+* [Nomor 2](#nomor-2)
+* [Nomor 3](#nomor-3)
+
 ## Nomor 1
+
+[Daftar Isi](#daftar-isi)
+
+Source Code : [Click here!](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal1/soal1.c)
 
 Solusi pada soal ini menggunakan daemon karena pada soal disebutkan bahwa semua poin dijalankan di background. Berikut code yang menghasilkan daemon process.
 
@@ -177,6 +188,11 @@ while(wait(&status) > 0);
 ```
 
 ## Nomor 2
+
+[Daftar Isi](#daftar-isi)
+
+Source Code : [Click here!](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal2/soal2.c)
+
 ### 2a.
 Inti dari sub soal 2a ialah mengunzip file jpg yang ada didalam `pets.zip` kemudian membuat folder baru di `/home/${USER}/modul2/petshop`. Disini saya membuat 2 fungsi baru bernama `unzip()` dan `makedir()` untuk menyelesaikan soal 2a.
 ```c
@@ -219,7 +235,10 @@ Inti dari sub soal 2d ialah karena dalam satu foto bisa terdapat lebih dari satu
 Inti dari sub soal 2e ialah membuat file `keterangan.txt` di masing-masing folder kategori hewan, dan file tersebut berisi nama dan umur hewan setiap direktori
 
 ## Nomor 3
-Source Code : [click here](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal3/soal3.c)
+
+[Daftar Isi](#daftar-isi)
+
+Source Code : [Click here!](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal3/soal3.c)
 
 ### 3a.Membuat program .C yang bertujuan membuat sebuah direktori setiap 40 detik dengan format nama timestamp YYYY-mm-dd_HH:ii:ss
 
