@@ -1,5 +1,181 @@
 # soal-shift-sisop-modul-2-A09-2021
 ## Nomor 1
+
+Solusi pada soal ini menggunakan daemon karena pada soal disebutkan bahwa semua poin dijalankan di background. Berikut code yang menghasilkan daemon process.
+
+```c
+pid_t pid, sid;
+
+pid = fork();
+
+if (pid < 0) {
+exit(EXIT_FAILURE);
+}
+
+if (pid > 0) {
+exit(EXIT_SUCCESS);
+}
+
+umask(0);
+
+sid = setsid();
+if (sid < 0) {
+exit(EXIT_FAILURE);
+}
+
+// Mengubah working directory
+if ((chdir("/home/rizqitsani/Sisop/soal-shift-sisop-modul-2-A09-2021/soal1")) < 0) {
+exit(EXIT_FAILURE);
+}
+
+close(STDIN_FILENO);
+close(STDOUT_FILENO);
+close(STDERR_FILENO);
+
+
+while (1) {
+    // Semua proses berjalan disini
+}
+```
+
+Proses yang berjalan dibagi menjadi dua, yaitu:
+1. Enam jam sebelum waktu ulang tahun Stevany (9 April 2021, 16:22):
+    - Membuat folder Pyoto, Musyik, dan Fylm
+    - Menjalankan fungsi `downloadThenUnzip` yang akan mengunduh file .zip dari drive lalu di-unzip
+    - Menjalankan fungsi `moveFile` untuk tiap folder hasil unzip. Fungsi ini akan memindah isi folder hasil unzip ke folder yang telah dibuat pada langkah pertama (Pyoto, Musyik, dan Fylm) dan menghapus folder hasil unzip
+2. Saat waktu ulang tahun Stevany (9 April 2021, 22:22):
+   - Menjalankan perintah untuk compress folder menjadi satu file dengan nama `Lopyu_Stevany.zip`
+
+Variabel global untuk membantu:
+```c
+// Nama folder untuk menyimpan file dari berkas .zip
+char *desiredName[] = {"Fylm", "Musyik", "Pyoto"};
+
+// Nama folder hasil unduhan dari drive
+char *fileName[] = {"Film_for_Stevany.zip", "Musik_for_Stevany.zip", "Foto_for_Stevany.zip"};
+
+// Nama folder setelah unzip
+char *folderName[] = {"FILM", "MUSIK", "FOTO"};
+```
+
+Inisiasi variabel-variabel yang dibutuhkan sebagai acuan waktu:
+
+```C
+time_t now = time(NULL);
+struct tm * currTime = localtime(&now);
+```
+
+Percabangan proses:
+```c
+if (
+    currTime->tm_mday == 9  &&
+    currTime->tm_mon  == 3  &&
+    currTime->tm_hour == 16 &&
+    currTime->tm_min  == 22 &&
+    currTime->tm_sec  == 0
+) {
+    // Proses 1 (16.22)
+} else if (
+    currTime->tm_mday == 9  &&
+    currTime->tm_mon  == 3  &&
+    currTime->tm_hour == 22 &&
+    currTime->tm_min  == 22 &&
+    currTime->tm_sec  == 0
+) {
+    // Proses 2 (22.22)
+}
+```
+
+### Proses 1 (Pukul 16.22)
+
+Pertama akan dibuat tiga folder menggunakan perintah `mkdir` dibantu dengan variabel global `desiredName`
+
+```c
+if((child_id = fork()) == 0) {
+    execlp("mkdir", "mkdir", "-p", desiredName[0], desiredName[1], desiredName[2], NULL);
+}
+
+while(wait(&status) > 0);
+```
+
+Kemudian akan dipanggil fungsi `downloadThenUnzip` yang isinya seperti ini:
+
+```c
+char *url[] = {
+    "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download",
+    "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download",
+    "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download"
+};
+
+pid_t child_id;
+int status;
+
+for(int i = 0; i < 3; i++) {
+    if((child_id = fork()) == 0) {
+        execlp("wget", "wget", "--no-check-certificate", url[i], "-O", fileName[i], "-q", NULL);
+    }
+
+    while(wait(&status) > 0);
+
+    if((child_id = fork()) == 0) {
+        execlp("unzip", "unzip", "-qq", fileName[i], NULL);
+    }
+
+    while(wait(&status) > 0);
+}
+```
+
+Terdapat dua proses yang dilakukan pada fungsi ini yaitu proses download (`wget`) dan unzip. Kedua proses berjalan untuk tiap objek (Foto, Musik, dan Film)
+
+Setelah fungsi `downloadThenUnzip` selesai dijalankan, folder hasil unzip dipindah isinya ke folder yang sudah dibuat dan folder asli dihapus dengan fungsi `moveFile`
+
+```c
+for(int i = 0; i < 3; i++) {
+    moveFile(folderName[i], desiredName[i]);
+}
+```
+
+Berikut isi fungsi `moveFile`
+
+```c
+pid_t child_id;
+int status;
+
+char srcPath[20], destPath[20];
+
+strcpy(srcPath, srcDir);
+strcat(srcPath, "/.");
+
+strcpy(destPath, destDir);
+strcat(destPath, "/");
+
+if((child_id = fork()) == 0) {
+    execlp("cp", "cp", "-a", srcPath, destPath, NULL);	
+}
+
+while(wait(&status) > 0);
+
+if((child_id = fork()) == 0) {
+    execlp("rm", "rm", "-r", srcDir, NULL);
+}
+
+while(wait(&status) > 0);
+```
+
+Digunakan perintah `cp` untuk memindah isi folder dan perintah `rm` untuk menghapus folder asal
+
+### Proses 2 (Pukul 22.22)
+
+Hanya ada satu proses yang berjalan disini yaitu proses zip folder menggunakan perintah `zip`
+
+```c
+if((child_id = fork()) == 0) {
+    execlp("zip", "zip", "-rmvq", "Lopyu_Stevany.zip", desiredName[0], desiredName[1], desiredName[2], NULL);
+}
+
+while(wait(&status) > 0);
+```
+
 ## Nomor 2
 ### 2a.
 Inti dari sub soal 2a ialah mengunzip file jpg yang ada didalam `pets.zip` kemudian membuat folder baru di `/home/${USER}/modul2/petshop`. Disini saya membuat 2 fungsi baru bernama `unzip()` dan `makedir()` untuk menyelesaikan soal 2a.
