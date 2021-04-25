@@ -423,18 +423,6 @@ Kemudian jika kita ambil contoh folder bernama `betta` akan berisi file nama hew
 Dan jika kita lihat isi `keterangan.txt` akan berisi nama dan umur setiap hewan
 ![Isi keterangan.txt https://ibb.co/fp7bYDT](https://i.ibb.co/HzQ0Dh9/Screenshot-from-2021-04-25-00-13-33.png)
 
-### 2b.
-Inti dari sub soal 2b ialah membuat folder berdasarkan nama kategori gambar hewan yang telah diextract, saya menggunakan directory listing secara rekursif agar bisa membaca seluruh file yang ada didalam folder `/modul2/petshop`
-
-### 2c.
-Inti dari sub soal 2c ialah memindahkan foto ke folder dengan kategori yang sesuai dan di rename dengan nama peliharaan.
-
-### 2d.
-Inti dari sub soal 2d ialah karena dalam satu foto bisa terdapat lebih dari satu peliharaan maka foto harus di pindah ke masing-masing kategori yang sesuai
-
-### 2e.
-Inti dari sub soal 2e ialah membuat file `keterangan.txt` di masing-masing folder kategori hewan, dan file tersebut berisi nama dan umur hewan setiap direktori
-
 ## Nomor 3
 
 [Daftar Isi](#daftar-isi)
