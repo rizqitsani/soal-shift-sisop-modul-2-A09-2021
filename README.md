@@ -196,6 +196,36 @@ if((child_id = fork()) == 0) {
 while(wait(&status) > 0);
 ```
 
+### **Kendala**
+
+Di awal sempat kebingungan bagaimana menerapkan konsep fork dan wait pada soal ini
+
+### **Screenshot**
+
+Output pukul 16.22:
+
+![Output pukul 16.22](https://i.ibb.co/jyw3FKP/Screenshot-from-2021-04-09-16-22-16.png "Output pukul 16.22")
+
+Isi Fylm:
+
+![Isi Fylm](https://i.ibb.co/KDnhVMC/Screenshot-from-2021-04-09-16-22-37.png "Isi Fylm")
+
+Isi Musyik:
+
+![Isi Musyik](https://i.ibb.co/X5t1h6B/Screenshot-from-2021-04-09-16-22-43.png "Isi Musyik")
+
+Isi Pyoto:
+
+![Isi Pyoto](https://i.ibb.co/CJjpxGG/Screenshot-from-2021-04-09-16-22-48.png "Isi Pyoto")
+
+Output pukul 22.22:
+
+![Output pukul 22.22](https://i.ibb.co/wzmvskw/Screenshot-from-2021-04-09-22-22-04.png "Output pukul 22.22")
+
+Isi Lovyu_Stevany.zip:
+
+![Isi Lovyu_Stevany.zip](https://i.ibb.co/sHVwX32/Screenshot-from-2021-04-09-22-22-31.png "Isi Lovyu_Stevany.zip")
+
 ## Nomor 2
 
 [Daftar Isi](#daftar-isi)
