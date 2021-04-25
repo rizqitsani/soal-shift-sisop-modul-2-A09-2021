@@ -12,6 +12,15 @@
 
 Source Code : [Click here!](https://github.com/rizqitsani/soal-shift-sisop-modul-2-A09-2021/blob/main/soal1/soal1.c)
 
+### **Deskripsi**
+
+Pada hari ulang tahun Stevany, Steven ingin memberikan Stevany zip berisikan hal-hal yang disukai Stevany. Steven ingin isi zipnya menjadi rapi dengan membuat folder masing-masing sesuai extensi. (a) Dikarenakan Stevany sangat menyukai huruf Y, Steven ingin nama folder-foldernya adalah Musyik untuk mp3, Fylm untuk mp4, dan Pyoto untuk jpg (b) untuk musik Steven mendownloadnya dari link di bawah, film dari link di bawah lagi, dan foto dari link dibawah juga :). (c) Steven tidak ingin isi folder yang dibuatnya berisikan zip, sehingga perlu meng-extract-nya setelah didownload serta (d) memindahkannya ke dalam folder yang telah dibuat (hanya file yang dimasukkan).
+
+(e) Untuk memudahkan Steven, ia ingin semua hal di atas berjalan otomatis 6 jam sebelum waktu ulang tahun Stevany). (f) Setelah itu pada waktu ulang tahunnya Stevany, semua folder akan di zip dengan nama Lopyu_Stevany.zip dan semua folder akan di delete(sehingga hanya menyisakan .zip).
+Kemudian Steven meminta bantuanmu yang memang sudah jago sisop untuk membantunya mendapatkan hati Stevany. Bantu Woy!!
+
+### **Pembahasan**
+
 Solusi pada soal ini menggunakan daemon karena pada soal disebutkan bahwa semua poin dijalankan di background. Berikut code yang menghasilkan daemon process.
 
 ```c
@@ -97,7 +106,7 @@ if (
 }
 ```
 
-### Proses 1 (Pukul 16.22)
+**Proses 1 (Pukul 16.22)**
 
 Pertama akan dibuat tiga folder menggunakan perintah `mkdir` dibantu dengan variabel global `desiredName`
 
@@ -175,7 +184,7 @@ while(wait(&status) > 0);
 
 Digunakan perintah `cp` untuk memindah isi folder dan perintah `rm` untuk menghapus folder asal
 
-### Proses 2 (Pukul 22.22)
+**Proses 2 (Pukul 22.22)**
 
 Hanya ada satu proses yang berjalan disini yaitu proses zip folder menggunakan perintah `zip`
 
